@@ -56,19 +56,26 @@ System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1
                 function NotesList() {
                     _super.apply(this, arguments);
                 }
+                Object.defineProperty(NotesList.prototype, "textbox", {
+                    get: function () {
+                        return ReactDOM.findDOMNode(this.refs["theNewItemBox"]);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 NotesList.prototype.doDelete = function (item, idx) {
                     this.props.data.splice(idx, 1);
                     this.forceUpdate();
                 };
                 NotesList.prototype.doAdd = function () {
-                    var textbox = document.getElementById("theNewItemBox");
-                    this.props.data.push(new Model_1.NoteItem(textbox.value));
+                    this.props.data.push(new Model_1.NoteItem(this.textbox.value));
+                    this.textbox.value = "";
                     this.forceUpdate();
                 };
                 NotesList.prototype.render = function () {
                     var onDelete = this.doDelete.bind(this);
                     var items = this.props.data.map(function (item, i) { return React.createElement(ListItem, {data: item, idx: i, onDelete: onDelete}); });
-                    return (React.createElement("table", {style: { width: "100%" }}, items, React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {id: "theNewItemBox", type: "text"}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add")))));
+                    return (React.createElement("table", {style: { width: "100%" }}, items, React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {ref: "theNewItemBox", type: "text"}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add")))));
                 };
                 return NotesList;
             }(React.Component));

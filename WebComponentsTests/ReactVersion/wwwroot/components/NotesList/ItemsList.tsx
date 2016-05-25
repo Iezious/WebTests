@@ -44,6 +44,11 @@ export class ListItem extends React.Component<IItemProp, IItemState>
 
 export class NotesList extends React.Component<IListProps, IListState>
 {
+    public get textbox(): HTMLInputElement
+    {
+        return ReactDOM.findDOMNode<HTMLInputElement>(this.refs["theNewItemBox"]);
+    }
+
     public doDelete(item: NoteItem, idx: number)
     {
         this.props.data.splice(idx, 1);
@@ -52,8 +57,8 @@ export class NotesList extends React.Component<IListProps, IListState>
 
     public doAdd()
     {
-        let textbox : any = document.getElementById("theNewItemBox");
-        this.props.data.push(new NoteItem(textbox.value));
+        this.props.data.push(new NoteItem(this.textbox.value));
+        this.textbox.value = "";
         this.forceUpdate();
     }
 
@@ -67,7 +72,7 @@ export class NotesList extends React.Component<IListProps, IListState>
                 {items}
                 <tr>
                     <td>
-                        <input id="theNewItemBox" type="text"/>
+                        <input ref="theNewItemBox" type="text"/>
                         <button onClick={this.doAdd.bind(this) }>Add</button>
                     </td>
                 </tr>
@@ -83,4 +88,5 @@ let initData = [
 ];
 
 ReactDOM.render(<NotesList data={initData}/>, document.getElementById("content"));
+
 
