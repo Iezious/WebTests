@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "jsx": "react",
+    "module": "system",
+    "declaration": false,
+    "sourceMap": true,
+    "target": "es5",
+    "experimentalDecorators": true,
+    "noLib": false,
+    "moduleResolution": "node"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot/lib"
+  ]
+}

@@ -86,19 +86,18 @@ System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1
                     this.forceUpdate();
                 };
                 NotesList.prototype.setText = function (event) {
-                    var txt = event.target.value;
                     this.setState(function (state) {
                         return {
                             selected: state.selected,
                             data: state.data,
-                            inputText: txt
+                            inputText: event.data
                         };
                     });
                 };
                 NotesList.prototype.render = function () {
                     var onDelete = this.doDelete.bind(this);
                     var items = this.state.data.map(function (item, i) { return React.createElement(ListItem, {data: item, idx: i, onDelete: onDelete}); });
-                    return (React.createElement("table", {style: { width: "100%" }}, items, React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {name: "theNewItemBox", value: this.state.inputText, type: "text", onChange: this.setText.bind(this)}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add")))));
+                    return (React.createElement("table", {style: { width: "100%" }}, items, React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {ref: "theNewItemBox", value: this.state.inputText, type: "text", onChange: this.setText.bind(this)}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add")))));
                 };
                 return NotesList;
             }(React.Component));
@@ -111,4 +110,4 @@ System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1
         }
     }
 });
-//# sourceMappingURL=ItemsList.js.map
+//# sourceMappingURL=ItemsList - Copy.js.map

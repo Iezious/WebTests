@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ReactVersion
+namespace ReactMobTest
 {
     public class Startup
     {

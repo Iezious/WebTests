@@ -4,26 +4,28 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {NoteItem, IItemProp, IItemState, IListProps, IListState} from "./Model";
+import {NoteItem, IItemProp, ItemState, IListProps, ListState} from "./Model";
+import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 
-export class ListItem extends React.Component<IItemProp, IItemState>
+@observer
+export class ListItem extends React.Component<IItemProp, ItemState>
 {
     constructor(props : IItemProp, context: any)
     {
         super(props, context);
-        this.state = { selected: false, checked: false };
+        this.state = new ItemState(false, false);
     }
 
     public selectItem()
     {
-        this.setState(state => { return { selected: !state.selected, checked: state.checked } });
-        if(this.props.onSelect) this.props.onSelect(this.props.data, this.props.idx);
+        this.state.selected = !this.state.selected;
+        if (this.props.onSelect) this.props.onSelect(this.props.data, this.props.idx);
     }
 
     public checkItem()
     {
-        this.setState(state => { return { selected: state.selected, checked: !state.checked } });
-        if(this.props.onSelect) this.props.onSelect(this.props.data, this.props.idx);
+        this.state.checked = !this.state.checked;
     }
 
     public incrementItem()
@@ -53,55 +55,31 @@ export class ListItem extends React.Component<IItemProp, IItemState>
             );
     }
 }
-
-export class NotesList extends React.Component<IListProps, IListState>
+ 
+@observer
+export class NotesList extends React.Component<IListProps, ListState>
 {
     constructor(props: IListProps, context: any)
     {
         super(props, context);
 
-        this.state = { selected: 0, data: props.initialData, inputText:"" };
+        this.state = new ListState(props.initialData);
     }
 
     public doDelete(item: NoteItem, idx: number)
     {
-        this.setState((state) =>
-        {
-            state.data.splice(idx, 1);
-            return {
-                selected: state.selected,
-                data: state.data,
-                inputText: state.inputText
-            }
-        });
+        this.state.data.splice(idx, 1);
     }
 
     public doAdd()
     {
-        this.setState((state) =>
-        {
-            state.data.push(new NoteItem(this.state.inputText));
-            return {
-                selected: state.selected,
-                data: state.data,
-                inputText: ""
-            }
-        });
-
-        this.forceUpdate();
+        this.state.data.push(new NoteItem(this.state.inputText));
+        this.state.inputText = "";
     }
 
-    public setText(event : any)
+    public setText(event: any)
     {
-        var txt = event.target.value;
-
-        this.setState((state) =>
-        {
-            return {
-                selected: state.selected,
-                data: state.data,
-                inputText: txt
-        }});
+        this.state.inputText = event.target.value;
     }
 
     public render(): JSX.Element
@@ -110,7 +88,8 @@ export class NotesList extends React.Component<IListProps, IListState>
         var items = this.state.data.map((item, i) => <ListItem data={item} idx={i} onDelete={onDelete}/>);
 
         return (
-            <table style={ {width: "100%"} }>
+            <table style={ { width: "100%" } }>
+                <tbody>
                 {items}
                 <tr>
                     <td>
@@ -118,6 +97,7 @@ export class NotesList extends React.Component<IListProps, IListState>
                         <button onClick={this.doAdd.bind(this) }>Add</button>
                     </td>
                 </tr>
+                </tbody>
             </table>
             );
     }

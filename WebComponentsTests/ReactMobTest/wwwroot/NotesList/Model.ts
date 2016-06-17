@@ -1,6 +1,13 @@
-﻿export class NoteItem
+﻿import * as React from "react";
+import * as ReactDOM from "react-dom";
+import {observable} from "mobx";
+
+export class NoteItem
 {
+    @observable
     text: string;
+
+    @observable
     clicks: number;
 
     constructor(text: string, clicks?:number)
@@ -10,10 +17,21 @@
     }
 }
 
-export interface IListState
+export class ListState
 {
+    constructor(data: NoteItem[])
+    {
+        this.data = data;
+        this.inputText = "";
+    }
+
+    @observable
     selected: number;
+
+    @observable
     data: Array<NoteItem>;
+
+    @observable
     inputText: string;
 }
 
@@ -23,9 +41,18 @@ export interface IListProps
 }
 
 
-export interface IItemState
+export class ItemState
 {
+    constructor(selected: boolean, checked: boolean)
+    {
+        this.selected = selected;
+        this.checked = checked;
+    }
+
+    @observable
     selected: boolean;
+
+    @observable
     checked: boolean;
 }
 

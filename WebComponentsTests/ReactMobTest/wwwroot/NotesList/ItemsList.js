@@ -1,7 +1,7 @@
 // A '.tsx' file enables JSX support in the TypeScript compiler, 
 // for more information see the following page on the TypeScript wiki:
 // https://github.com/Microsoft/TypeScript/wiki/JSX
-System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1) {
+System.register(['react', 'react-dom', "./Model", 'mobx-react'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -9,7 +9,13 @@ System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var React, ReactDOM, Model_1;
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var React, ReactDOM, Model_1, mobx_react_1;
     var ListItem, NotesList, initData;
     return {
         setters:[
@@ -21,23 +27,24 @@ System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1
             },
             function (Model_1_1) {
                 Model_1 = Model_1_1;
+            },
+            function (mobx_react_1_1) {
+                mobx_react_1 = mobx_react_1_1;
             }],
         execute: function() {
             ListItem = (function (_super) {
                 __extends(ListItem, _super);
                 function ListItem(props, context) {
                     _super.call(this, props, context);
-                    this.state = { selected: false, checked: false };
+                    this.state = new Model_1.ItemState(false, false);
                 }
                 ListItem.prototype.selectItem = function () {
-                    this.setState(function (state) { return { selected: !state.selected, checked: state.checked }; });
+                    this.state.selected = !this.state.selected;
                     if (this.props.onSelect)
                         this.props.onSelect(this.props.data, this.props.idx);
                 };
                 ListItem.prototype.checkItem = function () {
-                    this.setState(function (state) { return { selected: state.selected, checked: !state.checked }; });
-                    if (this.props.onSelect)
-                        this.props.onSelect(this.props.data, this.props.idx);
+                    this.state.checked = !this.state.checked;
                 };
                 ListItem.prototype.incrementItem = function () {
                     this.props.data.clicks = this.props.data.clicks + 1;
@@ -54,6 +61,9 @@ System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1
                     var selected = this.state ? this.state.selected : false;
                     return (React.createElement("tr", {clc: ticks, style: { backgroundColor: !selected ? "transparent" : "#77F" }}, React.createElement("td", null, " ", React.createElement("input", {type: "checkbox", onChange: this.checkItem.bind(this), value: this.state ? this.state.checked : false}), React.createElement("span", {onClick: this.selectItem.bind(this)}, this.props.data.text)), React.createElement("td", {onClick: this.incrementItem.bind(this)}, this.props.data.clicks), React.createElement("td", {onClick: this.deleteMe.bind(this)}, "X")));
                 };
+                ListItem = __decorate([
+                    mobx_react_1.observer
+                ], ListItem);
                 return ListItem;
             }(React.Component));
             exports_1("ListItem", ListItem);
@@ -61,45 +71,26 @@ System.register(['react', 'react-dom', "./Model"], function(exports_1, context_1
                 __extends(NotesList, _super);
                 function NotesList(props, context) {
                     _super.call(this, props, context);
-                    this.state = { selected: 0, data: props.initialData, inputText: "" };
+                    this.state = new Model_1.ListState(props.initialData);
                 }
                 NotesList.prototype.doDelete = function (item, idx) {
-                    this.setState(function (state) {
-                        state.data.splice(idx, 1);
-                        return {
-                            selected: state.selected,
-                            data: state.data,
-                            inputText: state.inputText
-                        };
-                    });
+                    this.state.data.splice(idx, 1);
                 };
                 NotesList.prototype.doAdd = function () {
-                    var _this = this;
-                    this.setState(function (state) {
-                        state.data.push(new Model_1.NoteItem(_this.state.inputText));
-                        return {
-                            selected: state.selected,
-                            data: state.data,
-                            inputText: ""
-                        };
-                    });
-                    this.forceUpdate();
+                    this.state.data.push(new Model_1.NoteItem(this.state.inputText));
+                    this.state.inputText = "";
                 };
                 NotesList.prototype.setText = function (event) {
-                    var txt = event.target.value;
-                    this.setState(function (state) {
-                        return {
-                            selected: state.selected,
-                            data: state.data,
-                            inputText: txt
-                        };
-                    });
+                    this.state.inputText = event.target.value;
                 };
                 NotesList.prototype.render = function () {
                     var onDelete = this.doDelete.bind(this);
                     var items = this.state.data.map(function (item, i) { return React.createElement(ListItem, {data: item, idx: i, onDelete: onDelete}); });
-                    return (React.createElement("table", {style: { width: "100%" }}, items, React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {name: "theNewItemBox", value: this.state.inputText, type: "text", onChange: this.setText.bind(this)}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add")))));
+                    return (React.createElement("table", {style: { width: "100%" }}, React.createElement("tbody", null, items, React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {name: "theNewItemBox", value: this.state.inputText, type: "text", onChange: this.setText.bind(this)}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add"))))));
                 };
+                NotesList = __decorate([
+                    mobx_react_1.observer
+                ], NotesList);
                 return NotesList;
             }(React.Component));
             exports_1("NotesList", NotesList);
