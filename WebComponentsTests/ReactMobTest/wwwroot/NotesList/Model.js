@@ -47,10 +47,14 @@ System.register(["mobx"], function(exports_1, context_1) {
             }());
             exports_1("ListState", ListState);
             ItemState = (function () {
-                function ItemState(selected, checked) {
+                function ItemState(selected, checked, data) {
                     this.selected = selected;
                     this.checked = checked;
+                    this.data = data;
                 }
+                __decorate([
+                    mobx_1.observable
+                ], ItemState.prototype, "data", void 0);
                 __decorate([
                     mobx_1.observable
                 ], ItemState.prototype, "selected", void 0);

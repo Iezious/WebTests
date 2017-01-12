@@ -5,7 +5,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {NoteItem, IItemProp, ItemState, IListProps, ListState} from "./Model";
-import {observable} from "mobx";
+import { observable, transaction} from "mobx";
 import {observer} from "mobx-react";
 
 @observer
@@ -14,7 +14,7 @@ export class ListItem extends React.Component<IItemProp, ItemState>
     constructor(props : IItemProp, context: any)
     {
         super(props, context);
-        this.state = new ItemState(false, false);
+        this.state = new ItemState(false, false, props.data);
     }
 
     public selectItem()
@@ -30,15 +30,14 @@ export class ListItem extends React.Component<IItemProp, ItemState>
 
     public incrementItem()
     {
-        this.props.data.clicks = this.props.data.clicks + 1;
-        this.forceUpdate();
+        this.state.data.clicks = this.props.data.clicks + 1;
 
         if (this.props.onIncrement) this.props.onIncrement(this.props.data, this.props.idx);
     }
 
     public deleteMe()
     {
-        if (this.props.onDelete) this.props.onDelete(this.props.data, this.props.idx);
+        if (this.props.onDelete) this.props.onDelete(this.state.data, this.props.idx);
     }
 
     public render() : JSX.Element
@@ -48,7 +47,10 @@ export class ListItem extends React.Component<IItemProp, ItemState>
 
         return (
             <tr clc={ticks} style={{backgroundColor: !selected ? "transparent" : "#77F"}}>
-                <td> <input type="checkbox" onChange={this.checkItem.bind(this) } value={this.state ? this.state.checked : false}/><span onClick={this.selectItem.bind(this) }>{this.props.data.text}</span></td>
+                <td>
+                    <input type="checkbox" onChange={this.checkItem.bind(this)} value={this.state ? this.state.checked : false} />
+                    <span onClick={this.selectItem.bind(this)}>{this.state.data.text}</span>
+                </td>
                 <td onClick={this.incrementItem.bind(this) }>{this.props.data.clicks}</td>
                 <td onClick={this.deleteMe.bind(this)}>X</td>
             </tr>
@@ -73,8 +75,11 @@ export class NotesList extends React.Component<IListProps, ListState>
 
     public doAdd()
     {
-        this.state.data.push(new NoteItem(this.state.inputText));
-        this.state.inputText = "";
+        transaction(() =>
+        {
+            this.state.data.push(new NoteItem(this.state.inputText));
+            this.state.inputText = "";
+        });
     }
 
     public setText(event: any)
@@ -85,18 +90,17 @@ export class NotesList extends React.Component<IListProps, ListState>
     public render(): JSX.Element
     {
         var onDelete = this.doDelete.bind(this);
-        var items = this.state.data.map((item, i) => <ListItem data={item} idx={i} onDelete={onDelete}/>);
-
+        
         return (
             <table style={ { width: "100%" } }>
                 <tbody>
-                {items}
-                <tr>
-                    <td>
-                        <input name="theNewItemBox" value={this.state.inputText} type="text" onChange={this.setText.bind(this)}/>
-                        <button onClick={this.doAdd.bind(this) }>Add</button>
-                    </td>
-                </tr>
+                    {this.state.data.map((item, i) => <ListItem data={item} idx={i} onDelete={onDelete} />)}
+                    <tr>
+                        <td>
+                            <input name="theNewItemBox" value={this.state.inputText} type="text" onChange={this.setText.bind(this)}/>
+                            <button onClick={this.doAdd.bind(this) }>Add</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             );

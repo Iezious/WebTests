@@ -43,11 +43,15 @@ export interface IListProps
 
 export class ItemState
 {
-    constructor(selected: boolean, checked: boolean)
+    constructor(selected: boolean, checked: boolean, data: NoteItem)
     {
         this.selected = selected;
         this.checked = checked;
+        this.data = data;
     }
+
+    @observable
+    data: NoteItem;
 
     @observable
     selected: boolean;

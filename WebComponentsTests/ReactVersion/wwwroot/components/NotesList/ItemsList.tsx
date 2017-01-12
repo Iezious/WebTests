@@ -107,11 +107,10 @@ export class NotesList extends React.Component<IListProps, IListState>
     public render(): JSX.Element
     {
         var onDelete = this.doDelete.bind(this);
-        var items = this.state.data.map((item, i) => <ListItem data={item} idx={i} onDelete={onDelete}/>);
-
+        
         return (
             <table style={ {width: "100%"} }>
-                {items}
+                {this.state.data.map((item, i) => <ListItem data={item} idx={i} onDelete={onDelete} />)}
                 <tr>
                     <td>
                         <input name="theNewItemBox" value={this.state.inputText} type="text" onChange={this.setText.bind(this)}/>
