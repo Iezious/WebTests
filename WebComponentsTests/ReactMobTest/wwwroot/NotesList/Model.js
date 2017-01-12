@@ -8,7 +8,7 @@ System.register(["mobx"], function(exports_1, context_1) {
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var mobx_1;
-    var NoteItem, ListState, ItemState;
+    var NoteItem, ItemState, ListState;
     return {
         setters:[
             function (mobx_1_1) {
@@ -29,23 +29,6 @@ System.register(["mobx"], function(exports_1, context_1) {
                 return NoteItem;
             }());
             exports_1("NoteItem", NoteItem);
-            ListState = (function () {
-                function ListState(data) {
-                    this.data = data;
-                    this.inputText = "";
-                }
-                __decorate([
-                    mobx_1.observable
-                ], ListState.prototype, "selected", void 0);
-                __decorate([
-                    mobx_1.observable
-                ], ListState.prototype, "data", void 0);
-                __decorate([
-                    mobx_1.observable
-                ], ListState.prototype, "inputText", void 0);
-                return ListState;
-            }());
-            exports_1("ListState", ListState);
             ItemState = (function () {
                 function ItemState(selected, checked, data) {
                     this.selected = selected;
@@ -64,6 +47,23 @@ System.register(["mobx"], function(exports_1, context_1) {
                 return ItemState;
             }());
             exports_1("ItemState", ItemState);
+            ListState = (function () {
+                function ListState(data) {
+                    this.data = data;
+                    this.inputText = "";
+                }
+                __decorate([
+                    mobx_1.observable
+                ], ListState.prototype, "selected", void 0);
+                __decorate([
+                    mobx_1.observable
+                ], ListState.prototype, "data", void 0);
+                __decorate([
+                    mobx_1.observable
+                ], ListState.prototype, "inputText", void 0);
+                return ListState;
+            }());
+            exports_1("ListState", ListState);
         }
     }
 });

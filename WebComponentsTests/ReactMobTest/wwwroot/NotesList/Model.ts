@@ -17,30 +17,6 @@ export class NoteItem
     }
 }
 
-export class ListState
-{
-    constructor(data: NoteItem[])
-    {
-        this.data = data;
-        this.inputText = "";
-    }
-
-    @observable
-    selected: number;
-
-    @observable
-    data: Array<NoteItem>;
-
-    @observable
-    inputText: string;
-}
-
-export interface IListProps
-{
-    initialData: Array<NoteItem>;
-}
-
-
 export class ItemState
 {
     constructor(selected: boolean, checked: boolean, data: NoteItem)
@@ -67,4 +43,28 @@ export interface IItemProp
     onSelect?: (item: NoteItem, idx: number) => void;
     onIncrement?: (item: NoteItem, idx: number) => void;
     onDelete?: (item: NoteItem, idx: number) => void;
+}
+
+
+export class ListState
+{
+    constructor(data: NoteItem[])
+    {
+        this.data = data;
+        this.inputText = "";
+    }
+
+    @observable
+    selected: number;
+
+    @observable
+    data: Array<NoteItem>;
+
+    @observable
+    inputText: string;
+}
+
+export interface IListProps
+{
+    initialData: Array<NoteItem>;
 }

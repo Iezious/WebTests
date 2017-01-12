@@ -46,9 +46,6 @@ System.register(['react', 'react-dom', "./Model", "mobx", "mobx-react"], functio
                     if (this.props.onSelect)
                         this.props.onSelect(this.props.data, this.props.idx);
                 };
-                ListItem.prototype.checkItem = function () {
-                    this.state.checked = !this.state.checked;
-                };
                 ListItem.prototype.incrementItem = function () {
                     this.state.data.clicks = this.props.data.clicks + 1;
                     if (this.props.onIncrement)
@@ -59,9 +56,10 @@ System.register(['react', 'react-dom', "./Model", "mobx", "mobx-react"], functio
                         this.props.onDelete(this.state.data, this.props.idx);
                 };
                 ListItem.prototype.render = function () {
+                    var _this = this;
                     var ticks = (new Date()).getTime();
                     var selected = this.state ? this.state.selected : false;
-                    return (React.createElement("tr", {clc: ticks, style: { backgroundColor: !selected ? "transparent" : "#77F" }}, React.createElement("td", null, React.createElement("input", {type: "checkbox", onChange: this.checkItem.bind(this), value: this.state ? this.state.checked : false}), React.createElement("span", {onClick: this.selectItem.bind(this)}, this.state.data.text)), React.createElement("td", {onClick: this.incrementItem.bind(this)}, this.props.data.clicks), React.createElement("td", {onClick: this.deleteMe.bind(this)}, "X")));
+                    return (React.createElement("tr", {clc: ticks, style: { backgroundColor: !selected ? "transparent" : "#77F" }}, React.createElement("td", null, React.createElement("input", {type: "checkbox", onChange: function () { return _this.state.checked = !_this.state.checked; }, value: this.state.checked}), React.createElement("span", {onClick: this.selectItem.bind(this)}, this.state.data.text)), React.createElement("td", {onClick: this.incrementItem.bind(this)}, this.props.data.clicks), React.createElement("td", {onClick: this.deleteMe.bind(this)}, "X")));
                 };
                 ListItem = __decorate([
                     mobx_react_1.observer
@@ -90,7 +88,8 @@ System.register(['react', 'react-dom', "./Model", "mobx", "mobx-react"], functio
                 };
                 NotesList.prototype.render = function () {
                     var onDelete = this.doDelete.bind(this);
-                    return (React.createElement("table", {style: { width: "100%" }}, React.createElement("tbody", null, this.state.data.map(function (item, i) { return React.createElement(ListItem, {data: item, idx: i, onDelete: onDelete}); }), React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {name: "theNewItemBox", value: this.state.inputText, type: "text", onChange: this.setText.bind(this)}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add"))))));
+                    var valid = this.state.inputText !== "22";
+                    return (React.createElement("table", {style: { width: "100%" }}, React.createElement("tbody", null, this.state.data.map(function (item, i) { return React.createElement(ListItem, {data: item, idx: i, onDelete: onDelete}); }), React.createElement("tr", null, React.createElement("td", null, React.createElement("input", {name: "theNewItemBox", value: this.state.inputText, type: "text", onChange: this.setText.bind(this), style: { backgroundColor: valid ? "transparent" : "red" }}), React.createElement("button", {onClick: this.doAdd.bind(this)}, "Add"))))));
                 };
                 NotesList = __decorate([
                     mobx_react_1.observer
@@ -98,10 +97,10 @@ System.register(['react', 'react-dom', "./Model", "mobx", "mobx-react"], functio
                 return NotesList;
             }(React.Component));
             exports_1("NotesList", NotesList);
-            initData = [
+            exports_1("initData", initData = [
                 new Model_1.NoteItem("Note1"), new Model_1.NoteItem("This is note2", 10), new Model_1.NoteItem("Some more note"),
                 new Model_1.NoteItem("lorem ipsum")
-            ];
+            ]);
             ReactDOM.render(React.createElement(NotesList, {initialData: initData}), document.getElementById("content"));
         }
     }

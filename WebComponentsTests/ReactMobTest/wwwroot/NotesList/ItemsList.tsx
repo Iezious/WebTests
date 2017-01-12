@@ -23,11 +23,6 @@ export class ListItem extends React.Component<IItemProp, ItemState>
         if (this.props.onSelect) this.props.onSelect(this.props.data, this.props.idx);
     }
 
-    public checkItem()
-    {
-        this.state.checked = !this.state.checked;
-    }
-
     public incrementItem()
     {
         this.state.data.clicks = this.props.data.clicks + 1;
@@ -48,7 +43,7 @@ export class ListItem extends React.Component<IItemProp, ItemState>
         return (
             <tr clc={ticks} style={{backgroundColor: !selected ? "transparent" : "#77F"}}>
                 <td>
-                    <input type="checkbox" onChange={this.checkItem.bind(this)} value={this.state ? this.state.checked : false} />
+                    <input type="checkbox" onChange={() => this.state.checked = !this.state.checked} value={this.state.checked} />
                     <span onClick={this.selectItem.bind(this)}>{this.state.data.text}</span>
                 </td>
                 <td onClick={this.incrementItem.bind(this) }>{this.props.data.clicks}</td>
@@ -90,6 +85,7 @@ export class NotesList extends React.Component<IListProps, ListState>
     public render(): JSX.Element
     {
         var onDelete = this.doDelete.bind(this);
+        let valid = this.state.inputText !== "22";
         
         return (
             <table style={ { width: "100%" } }>
@@ -97,7 +93,7 @@ export class NotesList extends React.Component<IListProps, ListState>
                     {this.state.data.map((item, i) => <ListItem data={item} idx={i} onDelete={onDelete} />)}
                     <tr>
                         <td>
-                            <input name="theNewItemBox" value={this.state.inputText} type="text" onChange={this.setText.bind(this)}/>
+                            <input name="theNewItemBox" value={this.state.inputText} type="text" onChange={this.setText.bind(this)} style={{ backgroundColor: valid ? "transparent" : "red"}}/>
                             <button onClick={this.doAdd.bind(this) }>Add</button>
                         </td>
                     </tr>
@@ -108,7 +104,7 @@ export class NotesList extends React.Component<IListProps, ListState>
 }
 
 
-let initData = [
+export let initData = [
     new NoteItem("Note1"), new NoteItem("This is note2", 10), new NoteItem("Some more note"),
     new NoteItem("lorem ipsum")
 ];
