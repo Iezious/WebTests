@@ -1,7 +1,7 @@
 // A '.tsx' file enables JSX support in the TypeScript compiler, 
 // for more information see the following page on the TypeScript wiki:
 // https://github.com/Microsoft/TypeScript/wiki/JSX
-System.register(['react', 'react-dom', "./Model", 'mobx-react'], function(exports_1, context_1) {
+System.register(['react', 'react-dom', "./Model", "mobx-react"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {

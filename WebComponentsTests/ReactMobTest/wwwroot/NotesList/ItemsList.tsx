@@ -5,8 +5,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {NoteItem, IItemProp, ItemState, IListProps, ListState} from "./Model";
-import {observable} from 'mobx';
-import {observer} from 'mobx-react';
+import {observable} from "mobx";
+import {observer} from "mobx-react";
 
 @observer
 export class ListItem extends React.Component<IItemProp, ItemState>
